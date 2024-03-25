@@ -21,7 +21,7 @@ final goRouter = GoRouter(
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         // the UI shell
-        return HomeView(navigationShell: navigationShell);
+        return HomeShell(navigationShell: navigationShell);
       },
       branches: [
         // first branch (A)

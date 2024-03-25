@@ -2,12 +2,14 @@
 // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:persistent_bottom_bar_with_riverpod/views/home_view_with_nav_bar.dart';
+import 'package:persistent_bottom_bar_with_riverpod/views/home_view_with_nav_rail.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({
+class HomeShell extends StatelessWidget {
+  const HomeShell({
     Key? key,
     required this.navigationShell,
-  }) : super(key: key ?? const ValueKey('HomeView'));
+  }) : super(key: key ?? const ValueKey('HomeShell'));
   final StatefulNavigationShell navigationShell;
 
   void _goBranch(int index) {
@@ -23,16 +25,21 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        destinations: const [
-          NavigationDestination(label: 'Section A', icon: Icon(Icons.home)),
-          NavigationDestination(label: 'Section B', icon: Icon(Icons.settings)),
-        ],
-        onDestinationSelected: _goBranch,
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      // layout breakpoint: tweak as needed
+      if (constraints.maxWidth < 450) {
+        return HomeViewWithNavBar(
+          body: navigationShell,
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: _goBranch,
+        );
+      } else {
+        return HomeViewWithNavigationRail(
+          body: navigationShell,
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: _goBranch,
+        );
+      }
+    });
   }
 }
